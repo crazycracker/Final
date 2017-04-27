@@ -1,0 +1,27 @@
+{% extends 'account/base.html' %}
+{% load staticfiles %}
+{% block title %}
+    <title>Events</title>
+{% endblock %}
+{% block head %}
+    <!--FullCalendar Dependencies-->
+    <link rel="stylesheet" type="text/css" href="/static/css/roomStyling.css"/>
+    <link href="{% static 'fullcalendar-new/fullcalendar.css' %}" rel="stylesheet"/>
+    <link href="{% static 'fullcalendar-new/fullcalendar.print.css' %}" rel="stylesheet" media="print"/>
+    <script src="{% static 'fullcalendar-new/lib/jquery.min.js' %}"></script>
+    <script src="{% static 'fullcalendar-new/lib/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src='{% static 'fullcalendar-new/lib/moment.min.js' %}'></script>
+    <script src='{% static 'fullcalendar-new/fullcalendar.min.js' %}'></script>
+    <script src="{% static 'fullcalendar-new/calendarEventView.js' %}"></script>
+{% endblock %}
+
+{% block content %}
+    <!--FullCalendar container div-->
+    <input type="hidden" id="rowId" value="{{ rowId }}">
+    <input type="hidden" id="date" value="{{ eventStartDate }}">
+    <div id='calendar'></div>
+{% endblock %}
+{% block javascript %}
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+{% endblock %}

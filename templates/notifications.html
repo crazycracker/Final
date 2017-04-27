@@ -1,0 +1,248 @@
+{% extends 'account/base.html' %}
+{% block head %}
+{% endblock %}
+
+{% block javascript %}
+    <script src="/static/js/seats.js"></script>
+{% endblock %}
+{% block content %}
+    <div class="container">
+        {% if user_type == "faculty" %}
+
+            <ul class="nav nav-tabs nav-justified" role="tablist">
+                <li role="presentation" class="active"><a href="#requests" aria-controls="requests"
+                                                          data-toggle="tab">Requests</a></li>
+                <li role="presentation"><a href="#dealt" aria-controls="dealt" data-toggle="tab">Dealt Requests</a></li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="requests" role="tabpanel">
+                    haha
+                    <table width="100%">
+                        <tr>
+                            <th>
+                                Id
+                            </th>
+
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Block
+                            </th>
+                            <th>
+                                Room Number
+                            </th>
+                            <th>
+                                Type
+                            </th>
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                                Description
+                            </th>
+
+                        </tr>
+
+                        {% for row in rows %}
+                            <tr id="">
+                                <td>
+                                    {{ row.sender_id }}
+                                </td>
+                                <td>
+                                    {{ row.sender }}
+                                </td>
+                                <td>
+                                    {{ row.block }}
+                                </td>
+                                <td>
+                                    {{ row.room_number }}
+                                </td>
+                                <td>
+                                    {{ row.block_type }}
+                                </td>
+                                <td>
+                                    {{ row.startDateTime }}
+                                    {{ row.endDateTime }}
+                                </td>
+                                <td>
+                                    {{ row.description }}
+                                </td>
+                                <td>
+                                    <form action="{% url 'nothandler' pk=row.id status='1' %}" method="post">
+                                        {% csrf_token %}
+
+                                        <input type="submit" value="Accept"/>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form action="{% url 'nothandler' pk=row.id status='0' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Reject"/>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                </div>
+                <div class="tab-pane fade" id="dealt" role="tabpanel">
+                    <table width="100%">
+                        <tr>
+                            <th>
+                                Id
+                            </th>
+
+                            <th>
+                                Name
+                            </th>
+                            <th>
+                                Block
+                            </th>
+                            <th>
+                                Room Number
+                            </th>
+                            <th>
+                                Type
+                            </th>
+                            <th>
+                                Date
+                            </th>
+                            <th>
+                                Description
+                            </th>
+
+                        </tr>
+                        {% for row in rows %}
+                            <tr id="{{ row.id }}">
+                                <td>
+                                    {{ row.sender_id }}
+                                </td>
+                                <td>
+                                    {{ row.sender }}
+                                </td>
+                                <td>
+                                    {{ row.block }}
+                                </td>
+                                <td>
+                                    {{ row.room_number }}
+                                </td>
+                                <td>
+                                    {{ row.block_type }}
+                                </td>
+                                <td>
+                                    {{ row.startDateTime }}
+                                    {{ row.endDateTime }}
+                                </td>
+                                <td>
+                                    {{ row.description }}
+                                </td>
+                                <td>
+                                    <form action="{% url 'nothandler' pk=row.id status='1' %}" method="post">
+                                        {% csrf_token %}
+
+                                        <input type="submit" value="Accept"/>
+                                    </form>
+                                </td>
+                                <td>
+                                    <form action="{% url 'nothandler' pk=row.id status='0' %}" method="post">
+                                        {% csrf_token %}
+                                        <input type="submit" value="Reject"/>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </table>
+
+                </div>
+            </div>
+
+
+        {% elif user_type == "student" %}
+
+            <table width="100%">
+                <tr>
+                    <th>
+                        Block
+                    </th>
+                    <th>
+                        Room Number
+                    </th>
+                    <th>
+                        Block type
+                    </th>
+                    <th>
+                        Acceptor
+                    </th>
+                    <th>
+                        Date
+                    </th>
+                    <th>
+                        Description
+                    </th>
+                    <th>
+                        Status
+                    </th>
+
+                </tr>
+
+                {% for row1 in rows %}
+                    <tr id="{{ row1.id }}">
+                        <!--<td>-->
+                        <!--{{row1.}}-->
+                        <!--</td>-->
+                        <td>
+                            {{ row1.block }}
+                        </td>
+                        <td>
+                            {{ row1.room_number }}
+                        </td>
+                        <td>
+                            {{ row1.block_type }}
+                        </td>
+                        <td>
+                            {{ row1.granter }}
+                        </td>
+                        <td>
+                            {{ row1.startDateTime }}
+                            {{ row1.endDateTime }}
+                        </td>
+                        <td>
+                            {{ row1.description }}
+                        </td>
+                        <td>
+                            {% if row1.booking_status == "0" %}
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">
+                                        Waiting
+                                    </button>
+                                </form>
+                            {% elif row1.booking_status == "1" %}
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">
+                                        Accepted
+                                    </button>
+                                </form>
+                            {% elif row1.booking_status == "2" %}
+                                <form action="" method="post">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn btn-primary">
+                                        Rejected
+                                    </button>
+                                </form>
+                            {% endif %}
+                            <form action="{% url 'viewEvents' pk=row1.id %}" method="post">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-primary">
+                                    View Event
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                {% endfor %}
+            </table>
+        {% endif %}
+    </div>
+{% endblock %}

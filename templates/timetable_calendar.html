@@ -1,0 +1,97 @@
+{% extends 'account/base.html' %}
+{% load staticfiles %}
+{% block title %}
+    <title>Schedule for Room Number: {{ room }}</title>
+{% endblock %}
+{% block head %}
+    <!--FullCalendar Dependencies-->
+    <link rel="stylesheet" type="text/css" href="/static/css/roomStyling.css"/>
+    <link href="{% static 'fullcalendar-new/fullcalendar.css' %}" rel="stylesheet"/>
+    <link href="{% static 'fullcalendar-new/fullcalendar.print.css' %}" rel="stylesheet" media="print"/>
+    <link href="{% static 'fullcalendar-new/calendar_timetable.css' %}" rel="stylesheet"/>
+    <script src="{% static 'fullcalendar-new/lib/jquery.min.js' %}"></script>
+    <script src="{% static 'fullcalendar-new/lib/jquery-ui.min.js' %}"></script>
+    <script src="{% static 'js/bootstrap.min.js' %}"></script>
+    <script src='{% static 'fullcalendar-new/lib/moment.min.js' %}'></script>
+    <script src='{% static 'fullcalendar-new/fullcalendar.min.js' %}'></script>
+    <script src="{% static 'fullcalendar-new/calendar_timetable.js' %}"></script>
+
+{% endblock %}
+
+{% block content %}
+    <!--FullCalendar container div-->
+    <h3 id="roomnumber">{{ room }}</h3>
+
+    <div id='calendar'></div>
+<div class="modal fade" id="squarespaceModal" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+     aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">×</span><span
+                        class="sr-only">Close</span></button>
+                <h3 class="modal-title" id="lineModalLabel">CREATE AN EVENT</h3>
+            </div>
+            <div class="modal-body">
+
+                <form action="." method="post">
+                    {% csrf_token %} <!-- CSRF token is rendered by Django in forms to avoid CSRF attacks -->
+                    <!-- If there are non-field errors in the form,
+                         iterate over them one by one and display them.
+                     -->
+                    {% if form.non_field_errors %}
+                    <p class="error">
+                        {% for error in form.non_field_errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+
+                    <!-- Iterate over the fields in a form and render them  --
+                        {% for field in form.visible_fields %}
+                                <!-- Render the field label tag -->
+                    <div class="form-group">
+                        {{ field.label_tag }}
+                        <!-- If the field is required, display a * next to the field label -->
+                        <!-- Render the input field -->
+                        {{ field }}
+                    </div>
+                    <!-- Iterate over the field's errors, if any and display
+                     them one by one in a error alert
+                -->
+                    {% if field.errors %}
+                    <p class="error">
+                        {% for error in field.errors %}
+                        {{ error }}
+                        {% endfor %}
+                    </p>
+                    {% endif %}
+                    {% endfor %}
+                </form>
+
+            </div>
+            <div class="modal-footer">
+                <div class="btn-group btn-group-justified" role="group" aria-label="group button">
+                    <div class="btn-group" role="group">
+                        <button type="button" class="btn btn-default" data-dismiss="modal" role="button">Close
+                        </button>
+                    </div>
+                    <div class="btn-group btn-delete hidden" role="group">
+                        <button type="button" id="delImage" class="btn btn-default btn-hover-red"
+                                data-dismiss="modal" role="button">Delete
+                        </button>
+                    </div>
+                    <div class="btn-group" role="group">
+                        <button type="button" id="saveEvent" class="btn btn-default btn-hover-green" data-target="save"
+                                role="button">Save
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+{% block javascript %}
+{% endblock %}

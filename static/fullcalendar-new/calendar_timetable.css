@@ -1,0 +1,11 @@
+.fc-unthemed td.fc-today {
+    background: transparent;
+}
+h2, .h2 {
+    font-size: 32px;
+    display: none;
+}
+.fc-header .fc-state-active, .fc-header .ui-state-active {
+    z-index: 4;
+    display: none;
+}

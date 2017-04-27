@@ -1,0 +1,30 @@
+{% extends 'account/base.html' %}
+{% block head %}
+    <style type="text/css">
+        .container {
+            margin-top: 10px;
+        }
+    </style>
+{% endblock %}
+{% block javascript %}
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+{% endblock %}
+{% block content %}
+    <div class="container">
+
+    <div class="row">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            {% for class in rooms %}
+                <div class="btn-group" role="group">
+                    <form action="{% url 'get_schedule' room_number=class.room_number %}" method="post">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-primary btn-lg">
+                            {{ class.room_number }}
+                        </button>
+                    </form>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+</div>

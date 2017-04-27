@@ -1,0 +1,139 @@
+{% extends 'account/base.html' %}
+
+{% block content %}
+    <div class="container">
+
+    <div class="row">
+        <div class="btn-toolbar" role="toolbar" aria-label="Toolbar with button groups">
+            {% for class in rooms %}
+                <div class="btn-group" role="group">
+                    <!-- Button trigger modal -->
+                    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal"
+                            data-target="#{{ class.room_number }}">
+                        {{ class.room_number }}
+                    </button>
+                    <div class="modal fade" id="{{ class.room_number }}" tabindex="-1" role="dialog"
+                         aria-labelledby="myModalLabel">
+                        <div class="modal-dialog" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <button type="button" class="close" data-dismiss="modal"
+                                            aria-label="Close"><span
+                                            aria-hidden="true">&times;</span></button>
+                                    <h4 class="modal-title" id="myModalLabel">Description</h4>
+                                </div>
+
+
+                                <div class="modal-body">
+
+                                    <table border="1">
+                                        <tr>
+                                            <td>
+                                                Block
+                                            </td>
+                                            <td>
+                                                {{ class.block }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Room Number
+                                            </td>
+                                            <td>
+                                                {{ class.room_number }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Floor Number
+                                            </td>
+                                            <td>
+                                                {{ class.floor_number }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                MaximumCapacity
+                                            </td>
+                                            <td>
+                                                {{ class.maximum_capacity }}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Projector
+                                            </td>
+                                            <td>
+                                                {% if class.projector %}
+                                                    WORKING
+                                                {% else %}
+                                                    NOT WORKING
+                                                {% endif %}
+
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Computer
+                                            </td>
+                                            <td>
+
+                                                {% if class.computer %}
+                                                    WORKING
+                                                {% else %}
+                                                    NOT WORKING
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Air conditioner
+                                            </td>
+                                            <td>
+
+                                                {% if class.air_conditioner %}
+                                                    WORKING
+                                                {% else %}
+                                                    NOT WORKING
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                Speakers
+                                            </td>
+                                            <td>
+
+                                                {% if class.speakers %}
+                                                    WORKING
+                                                {% else %}
+                                                    NOT WORKING
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+
+                                    </table>
+
+
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close
+                                    </button>
+
+                                    <form action="{% url 'roomnumber' room_number=class.room_number block_name=class.block %}"
+                                          method="post">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-primary">Submit</button>
+                                    </form>
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+</div>

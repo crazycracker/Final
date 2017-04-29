@@ -13,6 +13,7 @@ $(document).ready(function () {
     var d = date.getDate();
     var m = date.getMonth();
     var y = date.getFullYear();
+    var deleteEvent;
     /*
      Initialize fullCalendar and store into variable.
      Why in variable?
@@ -44,7 +45,7 @@ $(document).ready(function () {
         var events = $('#calendar').fullCalendar('clientEvents');
 
         for (var i in events) {
-            if (events[i].booking_status == set) {
+            if (events[i].booking_status == set || events[i].entry_timetable == true) {
                 if (eventStartDay > events[i].start && eventStartDay < events[i].end) {
                     return true;
                 }
@@ -168,10 +169,11 @@ $(document).ready(function () {
                 var end = convert(event.end._d);
                 end = end.toString().split(" ");
                 $('#modalTitle').html(event.title);
-                if(event.sender)
+                deleteEvent = event;
+                if (event.sender)
                     $('#modalBody').html(event.sender + " " + event.sender_id);
                 else
-                    $('#modalBody').html( start[1] + " " + end[1] + " " + event.lecturer);
+                    $('#modalBody').html(start[1] + " " + end[1] + " " + event.lecturer);
                 $('#fullCalModal').modal();
             },
             eventRender: function (event, element) {
@@ -179,6 +181,12 @@ $(document).ready(function () {
                     event.booking_status = set;
                 }
                 console.log(event.sender_id + " " + event.booking_status + " " + x + " " + x1);
+
+                if (event.entry_timetable == true) {
+                    element.children('.fc-bg').css({'background-color': 'blue'});
+                    element.children('.fc-event-inner').css({'border-color': 'black'});
+                    element.children('.fc-event-inner').css({'color': 'red'});
+                }
                 if (event.booking_status === set) {
                     element.children('.fc-bg').css({'background-color': 'green'});
                     element.children('.fc-event-inner').css({'border-color': 'black'});
@@ -193,6 +201,25 @@ $(document).ready(function () {
         doSubmit();
     });
 
+    $('#delete').on('click', function (e) {
+        var start = formatDate(deleteEvent.start._d);
+        var today = formatDate(date);
+        console.log(deleteEvent);
+        if (start >= today) {
+            $.ajax({
+                url: "/deleteEvents",
+                type: 'Get',
+                data: "id=" + deleteEvent.event_id + "&sender_id=" + deleteEvent.sender_id,
+                datatype: "json",
+                contentType: "application/json",
+                success: function (data) {
+                    if(data == 'success'){
+                        $('#calendar').fullCalendar('removeEvents', deleteEvent._id);
+                    }
+                }
+            });
+        }
+    });
     function formatDate(date) {
         var d = new Date(date),
             month = '' + (d.getMonth() + 1),

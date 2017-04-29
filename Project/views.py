@@ -129,12 +129,14 @@ def eventlist(request):
             flag = 0
             for entry1 in bookedEvents:
                 startDate = datetime.datetime.strptime(entry1.startDateTime,"%Y-%m-%d %H:%M:%S")
-                endDate = datetime.datetime.strptime(entry1.startDateTime, "%Y-%m-%d %H:%M:%S")
+                endDate = datetime.datetime.strptime(entry1.endDateTime, "%Y-%m-%d %H:%M:%S")
                 if start > startDate and end < endDate:
                     flag = 1
                 if end > startDate and end < endDate:
                     flag = 1
                 if start <= startDate and end >= endDate:
+                    flag = 1
+                if start < endDate and end > endDate:
                     flag = 1
             if flag == 0:
                 events.append(entry)
@@ -146,9 +148,9 @@ def eventlist(request):
                           'title': entry.course, 'overlap': False,
                           'dow': [int(entry.dayOfWeek)],
                           'lecturer': entry.lecturer,
+                          'entry_timetable':True,
                           'room_number': entry.room_number}
             json_list.append(json_entry)
-
 
         for entry in events:
             json_entry = {'start': str(entry.startDateTime), 'end': str(entry.endDateTime), 'allDay': False,
@@ -156,7 +158,8 @@ def eventlist(request):
                           'booking_status': entry.booking_status,
                           'sender': entry.sender,
                           'sender_id': entry.sender_id,
-                          'room_number': entry.room_number}
+                          'room_number': entry.room_number,
+                          'event_id':entry.id}
             json_list.append(json_entry)
 
         for entry in bookedEvents:
@@ -165,7 +168,8 @@ def eventlist(request):
                           'booking_status': entry.booking_status,
                           'sender': entry.sender,
                           'sender_id': entry.sender_id,
-                          'room_number': entry.room_number}
+                          'room_number': entry.room_number,
+                          'event_id':entry.id}
             json_list.append(json_entry)
         return HttpResponse(json.dumps(json_list, cls=DjangoJSONEncoder), content_type='application/json')
 
@@ -301,3 +305,11 @@ def get_rooms(request):
 
 def testingLogin(request):
     return render(request,'testLogin.html')
+
+def deleteEvents(request):
+    eventId = request.GET['id']
+    username = request.GET['sender_id']
+    if request.user.username == username:
+        requestTable.objects.filter(id=eventId).delete()
+        return HttpResponse("success")
+    return HttpResponse("not success")
